@@ -8,14 +8,8 @@ name: ExScim Phoenix CI
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'ex_scim_phoenix/**'
-      - '.github/workflows/ex_scim_phoenix.yml'
   pull_request:
     branches: [ "main" ]
-    paths:
-      - 'ex_scim_phoenix/**'
-      - '.github/workflows/ex_scim_phoenix.yml'
 
 permissions:
   contents: read
@@ -38,20 +32,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ex_scim_phoenix/deps
-            ex_scim_phoenix/_build
-          key: ${{ runner.os }}-mix-ex_scim_phoenix-${{ hashFiles('ex_scim_phoenix/mix.lock') }}
+            deps
+            _build
+          key: ${{ runner.os }}-mix-ex_scim_phoenix-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
             ${{ runner.os }}-mix-ex_scim_phoenix-
     
       - name: Install dependencies
-        working-directory: ex_scim_phoenix
         run: mix deps.get
-    
+
       - name: Compile project
-        working-directory: ex_scim_phoenix
         run: MIX_ENV=test mix compile --warnings-as-errors
-    
+
       - name: Run tests
-        working-directory: ex_scim_phoenix
         run: mix test
